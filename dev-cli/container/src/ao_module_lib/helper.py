@@ -1,7 +1,9 @@
 import os
 import subprocess
 
-IS_DEBUG = os.environ.get('DEBUG', '')
+# IS_DEBUG = os.environ.get('DEBUG', '')
+
+IS_DEBUG = 1
 
 def encode_hex_literals(source):
     return ', '.join([r'0x{:02x}'.format(x) for x in source.encode('utf-8')])

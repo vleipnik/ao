@@ -52,6 +52,9 @@ def load_libraries(config: Config, definition: Definition, c_program: str, link_
         bundle_files += glob.glob('/opt/aolibc/aolibc.a', recursive=True)
     else:
         bundle_files += glob.glob('/opt/aolibc/aolibc32.a', recursive=True)
+
+    # Load didkit from /opt
+    bundle_files += glob.glob('/opt/didkit-wasm/didkit.so', recursive=True)
     
     bundle_files += glob.glob('/src/libs/**/*.lua', recursive=True)
     # bundle_files += glob.glob(local_include_dir + '/**/*.so', recursive=True)
@@ -85,8 +88,10 @@ def load_libraries(config: Config, definition: Definition, c_program: str, link_
                         is_module = True
 
                 if is_module:
+                    debug_print('Link library found: {}'.format(bundle))
                     link_libraries.append(BundleFile(bundle))
                 else:
+                    debug_print('Dependency found: {}'.format(bundle))
                     dependency_libraries.append(BundleFile(bundle))
 
             except (subprocess.CalledProcessError):

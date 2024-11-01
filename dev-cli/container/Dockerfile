@@ -60,6 +60,7 @@ RUN cd /lua-${LUA_VERSION}-32 && \
   make clean && \
   make generic CC='emcc -s WASM=1 -s SUPPORT_LONGJMP=1' 
 
+#RUN /luarocks-${LUAROCKS_VERSION} install wasmer
 
 #############################
 ##### Install Commands ######
@@ -81,6 +82,10 @@ RUN cd /lua-${LUA_VERSION}-32 && \
 # The repl command simply fires up lua repl, which is installed
 # as part of lua runtime above, and so requires no additional setup
 
+# RUN cd /opt/didkit-wasm && \
+#   make clean && \
+#   make generic CC='emcc -s WASM=1 -s MEMORY64=1 -s SUPPORT_LONGJMP=1  /lua-5.3.4-32/src/liblua.a -I/lua-5.3.4-32/src' 
+
 ###############
 #### Build ####
 ###############
@@ -93,6 +98,14 @@ RUN mkdir -p /opt/src
 COPY ./src/json.lua /opt/src/json.lua
 # COPY ./src/ao.lua /opt/src/ao.lua
 # COPY ./src/pack.lua /opt/pack.lua
+
+################
+#### DIDKit ####
+################
+
+# Build didkit wrapper for Lua
+COPY ./src/didkit-wasm /opt/didkit-wasm
+RUN cd /opt/didkit-wasm && make clean && make CC="emcc -s WASM=1 -s SUPPORT_LONGJMP=1 /lua-5.3.4-32/src/liblua.a -I/lua-5.3.4-32/src"
 
 RUN chmod +x /usr/local/bin/ao-build-module
 

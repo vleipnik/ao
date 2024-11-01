@@ -67,7 +67,7 @@ def main():
     c_source_files = []
     injected_lua_files = []
     dependency_libraries = []
-    
+
     # Inject c files into c_program if language is c
     if(language == 'c'):
         c_program = inject_c_files(definition, c_program, c_source_files)
@@ -150,6 +150,9 @@ def main():
 
     # Export the runtime methods cwrap
     cmd.extend(['-lm', '-ldl', '-o', definition.get_output_file(), '-s', 'EXPORTED_RUNTIME_METHODS=["cwrap"]'])
+
+    # Export DID verification methods
+    cmd.extend(['-s', 'EXPORTED_FUNCTIONS=["luaopen_didkit"]'])
 
     debug_print('Compile command is {}'.format(' '.join(cmd)))
     shell_exec(*cmd)
